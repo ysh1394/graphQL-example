@@ -15,6 +15,8 @@ const mockMsgs = Array(50)
     text: `${50 - i} mock test`,
   }));
 
+// console.log(JSON.stringify(mockMsgs)); 목데이터 복사 용
+
 const MsgList = () => {
   const [msgs, setMsgs] = useState(mockMsgs);
   const [editingId, setEditingId] = useState(null);

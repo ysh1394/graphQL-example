@@ -11,11 +11,15 @@ const MsgItem = ({
   startEdit,
   doneEdit,
   onDelete,
+  myId,
+  serverUser,
 }) => {
+  console.log("serverUser >>", serverUser);
+
   return (
     <List>
       <h3>
-        {userId}
+        {`${serverUser?.nickname} (${serverUser?.id})`}
         <sub>
           {new Date(timestamp).toLocaleString("ko-KR", {
             year: "numeric",
@@ -29,13 +33,19 @@ const MsgItem = ({
       </h3>
       {isEditing ? <MsgInput mutate={onUpdate} text={text} id={id} /> : text}
 
-      <ButtonWrapper>
-        <button onClick={isEditing ? doneEdit : startEdit}>
-          {" "}
-          {isEditing ? "취소" : "수정"}
-        </button>
-        <button onClick={onDelete}>삭제</button>
-      </ButtonWrapper>
+      {myId === userId ? (
+        <ButtonWrapper>
+          <button onClick={isEditing ? doneEdit : startEdit}>
+            {" "}
+            {isEditing ? "취소" : "수정"}
+          </button>
+          <button onClick={onDelete}>삭제</button>
+        </ButtonWrapper>
+      ) : (
+        <ButtonWrapper>
+          <span>동일한 아이디만 수정 가능합니다.</span>
+        </ButtonWrapper>
+      )}
     </List>
   );
 };
@@ -46,6 +56,10 @@ const ButtonWrapper = styled.div`
   text-align: right;
   right: 10px;
   bottom: 10px;
+
+  span {
+    font-size: 12px;
+  }
 `;
 
 const List = styled.li`

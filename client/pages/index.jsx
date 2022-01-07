@@ -1,6 +1,8 @@
 import styled from "styled-components";
 import MsgList from "../components/MsgList";
-import fetcher from "../fetcher";
+import { GET_MESSAGES } from "../graphql/messages";
+import { GET_USERS } from "../graphql/users";
+import { fetcher } from "../quertClient";
 
 const Home = ({ serverMsgs, serverUsers }) => {
   return (
@@ -17,8 +19,19 @@ const Title = styled.h1`
 `;
 
 export const getServerSideProps = async () => {
-  const serverMsgs = await fetcher("get", "/messages");
-  const serverUsers = await fetcher("get", "/users");
+  // const { messages: serverMsgs } = await fetcher(GET_MESSAGES);
+  // const { users: serverUsers } = await fetcher(GET_USERS);
+
+  // 아래는 개선된 방법
+  const [{ messages: serverMsgs }, { users: serverUsers }] = await Promise.all([
+    fetcher(GET_MESSAGES),
+    fetcher(GET_USERS),
+  ]);
+
+  console.log({
+    serverMsgs,
+    serverUsers,
+  });
 
   return {
     props: { serverMsgs, serverUsers },

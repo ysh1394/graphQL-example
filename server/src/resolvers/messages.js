@@ -13,9 +13,11 @@ const messageResolver = {
   Query: {
     messages: (parent, args, context) => {
       const { db } = context;
+      const { cursor = "" } = args;
       // 콘솔 찍어보기 위해 구조분해 함
       console.log({ parent, args, context });
-      return db.messages;
+      const fromIndex = db.messages.findIndex((msg) => msg.id === cursor) + 1;
+      return db.messages?.slice(fromIndex, fromIndex + 15) || [];
     },
     message: (parent, { id = "" }, { db }) => {
       return db.messages.find((msg) => msg.id === id);
@@ -51,19 +53,19 @@ const messageResolver = {
       }
     },
     deleteMessage: (parent, { id, userId }, { db }) => {
-      try {
-        const targetIndex = db.messages.findIndex((msg) => msg.id === id);
-        if (targetIndex < 0) throw Error("메시지가 없습니다.");
-        if (db.messages[targetIndex].userId !== userId)
-          throw Error("사용자가 다릅니다.");
+      // try {
+      const targetIndex = db.messages.findIndex((msg) => msg.id === id);
+      if (targetIndex < 0) throw Error("메시지가 없습니다.");
+      if (db.messages[targetIndex].userId !== userId)
+        throw Error("사용자가 다릅니다.");
 
-        db.messages.splice(targetIndex, 1);
-        setMsgs(db.messages);
+      db.messages.splice(targetIndex, 1);
+      setMsgs(db.messages);
 
-        return id;
-      } catch (err) {
-        throw Error(err);
-      }
+      return id;
+      // } catch (err) {
+      //   throw Error(err);
+      // }
     },
   },
 };

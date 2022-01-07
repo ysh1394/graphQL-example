@@ -14,7 +14,7 @@ const MsgItem = ({
   myId,
   serverUser,
 }) => {
-  console.log("serverUser >>", serverUser);
+  // console.log("serverUser >>", serverUser);
 
   return (
     <List>
